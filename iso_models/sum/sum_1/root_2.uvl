@@ -1,0 +1,8 @@
+features
+        root_2
+                optional
+                        feature1 {a 45}
+                        feature2 {a 30}
+
+constraints
+        feature1.a + feature2.a >= 7.5

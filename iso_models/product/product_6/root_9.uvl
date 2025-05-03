@@ -1,0 +1,15 @@
+features
+        root_9
+                optional
+                        feature1 {a 8}
+                        feature2 {a 6}
+                        feature3 {a 6}
+                        feature4 {a 3}
+                        feature5 {a 7}
+                        feature6 {a 10}
+                        feature7 {a 9}
+                        feature8 {a 4}
+                        feature9 {a 1}
+
+constraints
+        (1 + feature9.a) * (1 + feature8.a) * (1 + feature7.a) * (1 + feature6.a) * (1 + feature5.a) * (1 + feature4.a) * (1 + feature3.a) * (1 + feature1.a) * (1 + feature2.a) >= 24640

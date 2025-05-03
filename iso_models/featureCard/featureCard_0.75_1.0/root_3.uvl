@@ -1,0 +1,21 @@
+features
+        root_3
+                optional
+                        f cardinality [3..3]
+                                alternative
+                                        firstAlternativeFeature
+                                        secondAlternativeFeature
+                                        thirdAlternativeFeature
+                                or
+                                        firstOrFeature
+                                        secondOrFeature
+                                        thirdOrFeature
+                                optional
+                                        firstOptionalFeature
+                                        secondOptionalFeature
+                                        thirdOptionalFeature
+                                mandatory
+                                        firstMandatoryFeature
+                                        secondMandatoryFeature
+                                        thirdMandatoryFeature
+

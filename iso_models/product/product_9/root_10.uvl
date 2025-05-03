@@ -1,0 +1,16 @@
+features
+        root_10
+                optional
+                        feature1 {a 4}
+                        feature2 {a 1}
+                        feature3 {a 6}
+                        feature4 {a 9}
+                        feature5 {a 2}
+                        feature6 {a 8}
+                        feature7 {a 2}
+                        feature8 {a 3}
+                        feature9 {a 4}
+                        feature10 {a 6}
+
+constraints
+        (1 + feature10.a) * (1 + feature9.a) * (1 + feature8.a) * (1 + feature7.a) * (1 + feature6.a) * (1 + feature5.a) * (1 + feature4.a) * (1 + feature3.a) * (1 + feature1.a) * (1 + feature2.a) >= 1984500

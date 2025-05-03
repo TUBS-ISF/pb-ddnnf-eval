@@ -1,0 +1,21 @@
+features
+        root_58
+                optional
+                        f cardinality [15..58]
+                                alternative
+                                        firstAlternativeFeature
+                                        secondAlternativeFeature
+                                        thirdAlternativeFeature
+                                or
+                                        firstOrFeature
+                                        secondOrFeature
+                                        thirdOrFeature
+                                optional
+                                        firstOptionalFeature
+                                        secondOptionalFeature
+                                        thirdOptionalFeature
+                                mandatory
+                                        firstMandatoryFeature
+                                        secondMandatoryFeature
+                                        thirdMandatoryFeature
+

@@ -1,0 +1,9 @@
+features
+        root_3
+                optional
+                        feature1 {a 6}
+                        feature2 {a 3}
+                        feature3 {a 9}
+
+constraints
+        (1 + feature3.a) * (1 + feature1.a) * (1 + feature2.a) >= 280

@@ -1,0 +1,13 @@
+features
+        root_7
+                optional
+                        feature1 {a 94}
+                        feature2 {a 1}
+                        feature3 {a 95}
+                        feature4 {a 11}
+                        feature5 {a 29}
+                        feature6 {a 80}
+                        feature7 {a 73}
+
+constraints
+        feature7.a + feature6.a + feature5.a + feature4.a + feature3.a + feature1.a + feature2.a >= 76.60000000000001

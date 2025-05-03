@@ -1,0 +1,24 @@
+features
+        root_18
+                optional
+                        feature1 {a 3}
+                        feature2 {a 3}
+                        feature3 {a 9}
+                        feature4 {a 10}
+                        feature5 {a 2}
+                        feature6 {a 3}
+                        feature7 {a 10}
+                        feature8 {a 10}
+                        feature9 {a 6}
+                        feature10 {a 6}
+                        feature11 {a 3}
+                        feature12 {a 1}
+                        feature13 {a 9}
+                        feature14 {a 3}
+                        feature15 {a 2}
+                        feature16 {a 4}
+                        feature17 {a 9}
+                        feature18 {a 9}
+
+constraints
+        (1 + feature18.a) * (1 + feature17.a) * (1 + feature16.a) * (1 + feature15.a) * (1 + feature14.a) * (1 + feature13.a) * (1 + feature12.a) * (1 + feature11.a) * (1 + feature10.a) * (1 + feature9.a) * (1 + feature8.a) * (1 + feature7.a) * (1 + feature6.a) * (1 + feature5.a) * (1 + feature4.a) * (1 + feature3.a) * (1 + feature1.a) * (1 + feature2.a) >= 5008819200

@@ -1,0 +1,22 @@
+features
+        root_16
+                optional
+                        feature1 {a 8}
+                        feature2 {a 3}
+                        feature3 {a 2}
+                        feature4 {a 5}
+                        feature5 {a 9}
+                        feature6 {a 10}
+                        feature7 {a 7}
+                        feature8 {a 10}
+                        feature9 {a 4}
+                        feature10 {a 4}
+                        feature11 {a 2}
+                        feature12 {a 7}
+                        feature13 {a 7}
+                        feature14 {a 6}
+                        feature15 {a 8}
+                        feature16 {a 10}
+
+constraints
+        (feature1.a + feature2.a * feature3.a * feature4.a * feature5.a * feature6.a + feature7.a * feature8.a) / (feature9.a * feature10.a * feature11.a + feature12.a + feature13.a * feature14.a + feature15.a + feature16.a) >= 0

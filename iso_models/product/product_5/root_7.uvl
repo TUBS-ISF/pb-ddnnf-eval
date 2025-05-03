@@ -1,0 +1,13 @@
+features
+        root_7
+                optional
+                        feature1 {a 7}
+                        feature2 {a 7}
+                        feature3 {a 2}
+                        feature4 {a 6}
+                        feature5 {a 1}
+                        feature6 {a 6}
+                        feature7 {a 8}
+
+constraints
+        (1 + feature7.a) * (1 + feature6.a) * (1 + feature5.a) * (1 + feature4.a) * (1 + feature3.a) * (1 + feature1.a) * (1 + feature2.a) >= 432

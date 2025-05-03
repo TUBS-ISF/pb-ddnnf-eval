@@ -1,0 +1,10 @@
+features
+        root_4
+                optional
+                        feature1 {a 8}
+                        feature2 {a 10}
+                        feature3 {a 5}
+                        feature4 {a 4}
+
+constraints
+        (feature1.a + feature2.a) / (feature3.a * feature4.a) >= 0.9

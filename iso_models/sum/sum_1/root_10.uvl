@@ -1,0 +1,16 @@
+features
+        root_10
+                optional
+                        feature1 {a 12}
+                        feature2 {a 57}
+                        feature3 {a 47}
+                        feature4 {a 91}
+                        feature5 {a 40}
+                        feature6 {a 3}
+                        feature7 {a 56}
+                        feature8 {a 53}
+                        feature9 {a 100}
+                        feature10 {a 30}
+
+constraints
+        feature10.a + feature9.a + feature8.a + feature7.a + feature6.a + feature5.a + feature4.a + feature3.a + feature1.a + feature2.a >= 48.900000000000006
