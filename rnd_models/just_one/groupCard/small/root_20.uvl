@@ -1,0 +1,260 @@
+features
+        Boolean "Feature-0"
+                optional
+                        Boolean "Feature-1" {a 94}
+                                mandatory
+                                        Boolean "Feature-2" {a 66}
+                                                mandatory
+                                                        Boolean "Feature-6" {a 95}
+                                                                [0..1]
+                                                                        Boolean "Feature-60" {a 20}
+                                                                                mandatory
+                                                                                        Boolean "Feature-70" {a 78}
+                                                                                                alternative
+                                                                                                        Boolean "Feature-74" {a 44}
+                                                        Boolean "Feature-16" {a 31}
+                                                        Boolean "Feature-51" {a 16}
+                                                                optional
+                                                                        Boolean "Feature-62" {a 83}
+                                        Boolean "Feature-3" {a 42}
+                                                optional
+                                                        Boolean "Feature-4" {a 45}
+                                        Boolean "Feature-7" {a 55}
+                                                optional
+                                                        Boolean "Feature-19" {a 98}
+                                                                optional
+                                                                        Boolean "Feature-35" {a 3}
+                                                                        Boolean "Feature-48" {a 54}
+                                                                        Boolean "Feature-58" {a 22}
+                                                                                optional
+                                                                                        Boolean "Feature-67" {a 67}
+                                                                                                [1..1]
+                                                                                                        Boolean "Feature-72" {a 90}
+                                                        Boolean "Feature-20" {a 83}
+                                                                optional
+                                                                        Boolean "Feature-40" {a 46}
+                                                                                optional
+                                                                                        Boolean "Feature-52" {a 22}
+                                                                                        Boolean "Feature-69" {a 56}
+                                        Boolean "Feature-8" {a 19}
+                                                optional
+                                                        Boolean "Feature-15" {a 43}
+                                                                optional
+                                                                        Boolean "Feature-24" {a 50}
+                                                                        Boolean "Feature-39" {a 38}
+                                                                                mandatory
+                                                                                        Boolean "Feature-68" {a 29}
+                                                                                                optional
+                                                                                                        Boolean "Feature-83" {a 17}
+                                                                        Boolean "Feature-76" {a 27}
+                                                        Boolean "Feature-22" {a 75}
+                                                                optional
+                                                                        Boolean "Feature-78" {a 23}
+                                                        Boolean "Feature-31" {a 8}
+                                                        Boolean "Feature-56" {a 28}
+                                                                optional
+                                                                        Boolean "Feature-79" {a 43}
+                                                                                [1..1]
+                                                                                        Boolean "Feature-86" {a 76}
+                                                        Boolean "Feature-84" {a 71}
+                        Boolean "Feature-5" {a 12}
+                                optional
+                                        Boolean "Feature-9" {a 26}
+                                                [0..5]
+                                                        Boolean "Feature-11" {a 76}
+                                                                [1..1]
+                                                                        Boolean "Feature-13" {a 37}
+                                                                                optional
+                                                                                        Boolean "Feature-14" {a 40}
+                                                                                        Boolean "Feature-26" {a 19}
+                                                                                                optional
+                                                                                                        Boolean "Feature-41" {a 88}
+                                                                        Boolean "Feature-17" {a 79}
+                                                                                optional
+                                                                                        Boolean "Feature-25" {a 47}
+                                                                                        Boolean "Feature-32" {a 25}
+                                                                                        Boolean "Feature-43" {a 35}
+                                                                                                optional
+                                                                                                        Boolean "Feature-73" {a 74}
+                                                                                        Boolean "Feature-47" {a 70}
+                                                                        Boolean "Feature-44" {a 50}
+                                                                                mandatory
+                                                                                        Boolean "Feature-46" {a 85}
+                                                        Boolean "Feature-18" {a 14}
+                                                        Boolean "Feature-23" {a 28}
+                                                                optional
+                                                                        Boolean "Feature-42" {a 11}
+                                                                                optional
+                                                                                        Boolean "Feature-64" {a 97}
+                                                                                        Boolean "Feature-82" {a 74}
+                                                        Boolean "Feature-28" {a 84}
+                                                                optional
+                                                                        Boolean "Feature-33" {a 82}
+                                                                                optional
+                                                                                        Boolean "Feature-54" {a 72}
+                                                                                                optional
+                                                                                                        Boolean "Feature-63" {a 69}
+                                                                        Boolean "Feature-34" {a 25}
+                                                                                [0..1]
+                                                                                        Boolean "Feature-45" {a 7}
+                                                                                                optional
+                                                                                                        Boolean "Feature-50" {a 82}
+                                                                                                        Boolean "Feature-57" {a 14}
+                                                                                                        Boolean "Feature-80" {a 63}
+                                                                                                        Boolean "Feature-81" {a 36}
+                                                        Boolean "Feature-29" {a 16}
+                                                        Boolean "Feature-59" {a 59}
+                                        Boolean "Feature-21" {a 71}
+                                        Boolean "Feature-30" {a 26}
+                                                [0..1]
+                                                        Boolean "Feature-65" {a 32}
+                                                                mandatory
+                                                                        Boolean "Feature-71" {a 83}
+                                                                        Boolean "Feature-75" {a 49}
+                                                                                optional
+                                                                                        Boolean "Feature-85" {a 72}
+                                        Boolean "Feature-37" {a 41}
+                        Boolean "Feature-10" {a 2}
+                                mandatory
+                                        Boolean "Feature-12" {a 46}
+                                        Boolean "Feature-38" {a 91}
+                                        Boolean "Feature-49" {a 19}
+                                        Boolean "Feature-77" {a 9}
+                        Boolean "Feature-27" {a 79}
+                                alternative
+                                        Boolean "Feature-53" {a 24}
+                        Boolean "Feature-36" {a 13}
+                        Boolean "Feature-55" {a 36}
+                                optional
+                                        Boolean "Feature-61" {a 34}
+                                        Boolean "Feature-66" {a 63}
+
+constraints
+        "Feature-5" | "Feature-41" & ("Feature-8" <=> "Feature-47")
+        "Feature-66" <=> "Feature-75" | "Feature-4" & !("Feature-58")
+        "Feature-69" <=> ("Feature-79" <=> "Feature-31" => "Feature-23")
+        "Feature-63" => ("Feature-36" <=> "Feature-9" => ("Feature-52" <=> "Feature-16"))
+        "Feature-36" | ("Feature-38" | "Feature-29")
+        "Feature-22" | !("Feature-46")
+        "Feature-55" <=> "Feature-79" & ("Feature-32" | ("Feature-78" => "Feature-68"))
+        "Feature-26" <=> "Feature-59"
+        "Feature-11" => ("Feature-70" => !("Feature-75"))
+        "Feature-46" <=> "Feature-61" & ("Feature-49" <=> !("Feature-28"))
+        "Feature-17" | "Feature-16"
+        "Feature-75" | ("Feature-4" => "Feature-5" | !("Feature-17"))
+        "Feature-34" => !("Feature-69")
+        "Feature-25" | ("Feature-63" => "Feature-79" | ("Feature-9" <=> "Feature-81" | !("Feature-5")))
+        "Feature-78" => ("Feature-22" => ("Feature-44" <=> ("Feature-41" <=> "Feature-68" & !("Feature-49"))))
+        "Feature-14" | ("Feature-15" | ("Feature-68" | !("Feature-52")))
+        "Feature-8" & ("Feature-68" | "Feature-36" & ("Feature-84" | !("Feature-79")))
+        "Feature-17" => "Feature-81" | ("Feature-68" | "Feature-85")
+        "Feature-59" => ("Feature-23" <=> ("Feature-29" <=> ("Feature-50" <=> "Feature-1")))
+        "Feature-9" | "Feature-40"
+        "Feature-75" => ("Feature-69" <=> "Feature-29" => ("Feature-17" => ("Feature-62" <=> !("Feature-14"))))
+        "Feature-16" => "Feature-15" & ("Feature-62" | !("Feature-78"))
+        "Feature-81" => ("Feature-3" => "Feature-84" | !("Feature-70"))
+        "Feature-17" <=> "Feature-81" | ("Feature-41" | !("Feature-58"))
+        "Feature-8" <=> ("Feature-3" <=> "Feature-14" => !("Feature-49"))
+        "Feature-34" <=> ("Feature-55" <=> ("Feature-44" <=> "Feature-15" & ("Feature-86" & !("Feature-63"))))
+        "Feature-84" | "Feature-58"
+        "Feature-79" <=> !("Feature-50")
+        "Feature-69" => ("Feature-70" <=> !("Feature-47"))
+        "Feature-81" <=> "Feature-46"
+        "Feature-16" <=> !("Feature-82")
+        "Feature-8" | ("Feature-66" => "Feature-78" & ("Feature-63" <=> !("Feature-40")))
+        "Feature-41" <=> ("Feature-78" <=> ("Feature-1" <=> "Feature-62" => !("Feature-57")))
+        "Feature-55" & ("Feature-63" | ("Feature-81" => !("Feature-85")))
+        "Feature-49" & ("Feature-17" => "Feature-16" & "Feature-34")
+        "Feature-86" & ("Feature-67" & ("Feature-15" & ("Feature-82" | !("Feature-22"))))
+        "Feature-69" <=> "Feature-9" => "Feature-81" & !("Feature-40")
+        "Feature-31" <=> ("Feature-4" <=> "Feature-84" | ("Feature-8" <=> ("Feature-76" <=> "Feature-81")))
+        "Feature-68" => !("Feature-28")
+        "Feature-16" | ("Feature-62" | "Feature-58" & !("Feature-70"))
+        "Feature-46" => ("Feature-66" <=> ("Feature-47" <=> "Feature-1"))
+        "Feature-78" => "Feature-57" & ("Feature-81" <=> "Feature-14" & ("Feature-30" & !("Feature-66")))
+        "Feature-4" | "Feature-50"
+        "Feature-84" | ("Feature-4" => ("Feature-66" <=> !("Feature-79")))
+        "Feature-17" <=> ("Feature-28" <=> "Feature-76" & ("Feature-85" => "Feature-71"))
+        "Feature-1" <=> "Feature-36"
+        "Feature-84" | ("Feature-79" <=> "Feature-13" | "Feature-11")
+        "Feature-47" => "Feature-57" | ("Feature-49" | "Feature-23")
+        "Feature-25" => ("Feature-70" => ("Feature-81" <=> "Feature-11" => "Feature-75" & !("Feature-38")))
+        "Feature-82" => "Feature-46" & ("Feature-58" => !("Feature-75"))
+        "Feature-25" <=> "Feature-52" => "Feature-78" & "Feature-86"
+        "Feature-17" => "Feature-47" & ("Feature-1" <=> !("Feature-75"))
+        "Feature-31" => !("Feature-57")
+        "Feature-3" | "Feature-69" & ("Feature-36" => "Feature-25" | ("Feature-61" | "Feature-58"))
+        "Feature-25" => ("Feature-14" <=> !("Feature-78"))
+        "Feature-40" => ("Feature-59" => !("Feature-71"))
+        "Feature-40" & ("Feature-30" => "Feature-36" & "Feature-8")
+        "Feature-28" | !("Feature-26")
+        "Feature-85" | ("Feature-76" | ("Feature-40" => ("Feature-81" => "Feature-66" | !("Feature-79"))))
+        "Feature-55" => "Feature-79" | "Feature-13" & "Feature-61"
+        "Feature-9" | ("Feature-71" <=> "Feature-31" | "Feature-34")
+        "Feature-50" => ("Feature-32" => "Feature-9" & !("Feature-57"))
+        "Feature-28" | ("Feature-29" | ("Feature-5" <=> "Feature-61" => ("Feature-4" <=> !("Feature-76"))))
+        "Feature-25" <=> ("Feature-68" <=> "Feature-11" & ("Feature-28" => ("Feature-22" => !("Feature-31"))))
+        "Feature-36" <=> "Feature-84" & ("Feature-8" & ("Feature-40" & ("Feature-9" <=> "Feature-31")))
+        "Feature-1" | ("Feature-69" | ("Feature-38" <=> "Feature-9" | !("Feature-61")))
+        "Feature-23" <=> !("Feature-58")
+        "Feature-3" => ("Feature-50" => ("Feature-47" => ("Feature-78" <=> !("Feature-44"))))
+        "Feature-58" & ("Feature-30" & ("Feature-16" <=> "Feature-22" => ("Feature-3" <=> !("Feature-78"))))
+        "Feature-5" | "Feature-84" & ("Feature-85" <=> "Feature-69" | ("Feature-17" <=> "Feature-8"))
+        "Feature-57" => ("Feature-22" => !("Feature-3"))
+        "Feature-66" | !("Feature-63")
+        "Feature-14" => !("Feature-76")
+        "Feature-17" => ("Feature-30" <=> "Feature-4" & ("Feature-85" => !("Feature-52")))
+        "Feature-4" <=> "Feature-52" | !("Feature-31")
+        "Feature-84" | ("Feature-62" <=> "Feature-52" | ("Feature-11" | !("Feature-68")))
+        "Feature-55" <=> "Feature-68" & ("Feature-71" => ("Feature-79" <=> "Feature-44" | !("Feature-1")))
+        "Feature-69" => ("Feature-4" <=> "Feature-75")
+        "Feature-86" & ("Feature-9" <=> "Feature-68" => !("Feature-44"))
+        "Feature-30" | ("Feature-32" | ("Feature-52" => !("Feature-85")))
+        "Feature-86" & ("Feature-47" | ("Feature-40" => "Feature-4"))
+        "Feature-8" | "Feature-67" & ("Feature-58" => !("Feature-50"))
+        "Feature-32" => ("Feature-66" <=> "Feature-76")
+        "Feature-50" | ("Feature-81" <=> !("Feature-3"))
+        "Feature-50" => "Feature-61"
+        "Feature-38" | !("Feature-46")
+        "Feature-78" => "Feature-22" & ("Feature-85" | "Feature-59")
+        "Feature-1" <=> ("Feature-63" <=> "Feature-31" => "Feature-9" & !("Feature-84"))
+        "Feature-16" => "Feature-71" | ("Feature-44" <=> !("Feature-86"))
+        "Feature-41" | ("Feature-66" => ("Feature-17" <=> "Feature-5" | "Feature-23"))
+        "Feature-46" => ("Feature-52" => ("Feature-32" => "Feature-82"))
+        "Feature-52" | ("Feature-78" <=> "Feature-81" => ("Feature-40" <=> "Feature-50" & "Feature-8"))
+        "Feature-49" => ("Feature-78" => "Feature-13" & ("Feature-34" | !("Feature-85")))
+        "Feature-57" | ("Feature-82" => "Feature-55" & "Feature-15")
+        "Feature-68" & ("Feature-4" <=> "Feature-38" & ("Feature-32" <=> "Feature-29" & "Feature-5"))
+        "Feature-58" => "Feature-30" | ("Feature-15" => ("Feature-63" <=> !("Feature-82")))
+        "Feature-30" | ("Feature-62" => ("Feature-52" => "Feature-40" & ("Feature-28" => !("Feature-9"))))
+        "Feature-25" => ("Feature-86" => "Feature-11" | ("Feature-15" | !("Feature-78")))
+        "Feature-31" => ("Feature-52" <=> "Feature-5" | ("Feature-49" => !("Feature-15")))
+        "Feature-55" & !("Feature-13")
+        "Feature-49" | ("Feature-52" => "Feature-85")
+        "Feature-28" | ("Feature-23" | ("Feature-13" <=> !("Feature-30")))
+        "Feature-11" => ("Feature-68" => "Feature-86" | !("Feature-71"))
+        "Feature-34" | "Feature-31"
+        "Feature-40" | ("Feature-66" | ("Feature-62" <=> !("Feature-13")))
+        "Feature-13" | ("Feature-86" <=> "Feature-38" => "Feature-50" | ("Feature-55" | "Feature-85"))
+        "Feature-41" | ("Feature-82" <=> "Feature-59" & "Feature-14")
+        "Feature-49" => "Feature-84" | !("Feature-13")
+        "Feature-11" => "Feature-55" | ("Feature-26" | "Feature-70")
+        "Feature-63" | ("Feature-38" => "Feature-15")
+        "Feature-31" => ("Feature-3" => ("Feature-11" <=> ("Feature-84" <=> "Feature-14")))
+        "Feature-55" => "Feature-31" | ("Feature-71" | "Feature-81")
+        "Feature-22" <=> "Feature-34" & !("Feature-29")
+        "Feature-13" => ("Feature-84" => "Feature-62" | "Feature-28")
+        "Feature-59" => "Feature-58" & ("Feature-78" => ("Feature-46" => !("Feature-62")))
+        "Feature-26" => ("Feature-22" <=> ("Feature-59" <=> ("Feature-66" <=> "Feature-46" & !("Feature-15"))))
+        "Feature-16" <=> "Feature-58" | "Feature-86"
+        "Feature-50" <=> "Feature-46"
+        "Feature-32" => "Feature-81" | "Feature-22" & ("Feature-66" => "Feature-15")
+        "Feature-1" & ("Feature-11" | "Feature-67")
+        "Feature-9" & ("Feature-49" <=> !("Feature-66"))
+        "Feature-22" <=> "Feature-23" | ("Feature-76" <=> !("Feature-15"))
+        "Feature-8" <=> "Feature-52" | ("Feature-68" | !("Feature-85"))
+        "Feature-40" <=> "Feature-22" => ("Feature-9" => ("Feature-38" => "Feature-25"))
+        "Feature-49" & ("Feature-67" <=> "Feature-29" | "Feature-38")
+        "Feature-49" => ("Feature-62" <=> "Feature-79" & "Feature-23")
+        "Feature-1" => ("Feature-57" <=> "Feature-70")
+        "Feature-55" & !("Feature-70")
