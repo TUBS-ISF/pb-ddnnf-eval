@@ -4,7 +4,7 @@
 The repository consists of the following main components:
 * *final_results*: Contains the processed output of the results in the publication
 * *iso_models*: Contains the feature models representing the expressive concepts in isolation
-* *models*: Contains the basic industrial feature models
+* *repo_models*: Contains the basic industrial feature models
 * *rnd_models*: Contains the randomly generated feature models containing different combinations of the concepts
 * *lib*: Contains the external dependencies required for running the evaluation
 * *eval.py*: Runner for the evaluation

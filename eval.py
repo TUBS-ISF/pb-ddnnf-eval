@@ -5,6 +5,7 @@ import json
 import pprint
 import re
 import psutil
+import sys
 
 tmp_dir = "./tmp_files"
 log_file = "./eval.log"
@@ -411,13 +412,16 @@ def eval_modelset(name: str, model_dir, number_runs, stop_after_n_timeouts):
 def main():
     number_runs = 3
     stop_after_n_timeouts = 3
-    eval_modelset("test", "/home/stefan/test", 1, -1)
-    #repo_model_eval(number_runs)
-    #rnd_model_eval(number_runs)
-    #iso_model_eval(number_runs, stop_after_n_timeouts)
-    #eval_modelset("tmp", "/home/stefan/test", number_runs, -1)
-    #eval_modelset("tmp", "/home/stefan/test/rnd-models")
-    #real_world_eval(number_runs)
+    if len(sys.argv) < 2:
+        raise Exception(f'Missing target dataset')
+    if sys.argv[1] == 'repo':
+        repo_model_eval(number_runs)
+    elif sys.argv[1] == 'random':
+        rnd_model_eval(number_runs)
+    elif sys.arv[1] == 'isolated':
+        iso_model_eval(number_runs, stop_after_n_timeouts)
+    else:
+        raise Exception(f'Invalid target dataset {sys.argv[1]}')
 
 def rnd_model_eval(number_runs):
     eval_modelset("rnd_just_one_groupCard_small", "./rnd_models/just_one/groupCard/small", number_runs, -1)
@@ -449,7 +453,7 @@ def rnd_model_eval(number_runs):
     eval_modelset("rnd_all_large", "./rnd_models/all/large", number_runs, -1)
 
 def repo_model_eval(number_runs):
-    eval_modelset("repo", "./models", number_runs, -1)
+    eval_modelset("repo", "./repo_models", number_runs, -1)
 
 def iso_model_eval(number_runs, stop_after_n_timeouts):
     alt_model_eval(number_runs, stop_after_n_timeouts)
