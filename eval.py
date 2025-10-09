@@ -10,7 +10,8 @@ import sys
 tmp_dir = "./tmp_files"
 log_file = "./eval.log"
 timeout = 10 * 60 #10 min
-timeout_ddknife = 10*60 #10 min
+timeout_ddnnife = 10 * 60 #10 min
+memory_limit = "12G"
 
 def log(content):
     with open(log_file, "a") as file:
@@ -38,31 +39,29 @@ def run_encoding(uvl_file, dimacs_file, kind):
         process.wait()
         raise e
 
-def run_d4(dimacs_file, result_file_path):
-    command = "timeout " + str(timeout) + " ./lib/d4 \"" + dimacs_file + "\" -dDNNF -out=" + dimacs_file + "_d4.nnf" + " > " + result_file_path
+def run_timeout(command, timeout_seconds, mem_limit):
+    to_run = f"systemd-run --scope -p MemoryMax={mem_limit} -p RuntimeMaxSec={timeout_seconds} --user {command}"
     start_time = time.perf_counter()
-    process = subprocess.Popen(command, shell=True)
+    process = subprocess.Popen(to_run, shell=True)
     process.communicate()
     process.wait()
     end_time = time.perf_counter()
-    if process.returncode == 124:
-        raise subprocess.TimeoutExpired(cmd=command, timeout=timeout)
+    if process.returncode == 143:
+        raise subprocess.TimeoutExpired(cmd=command, timeout=timeout_seconds)
     if process.returncode != 0:
             raise subprocess.CalledProcessError(process.returncode, command)
     return end_time - start_time
 
+def run_d4(dimacs_file, result_file_path):
+    command = f"./lib/d4 --input \"{dimacs_file}\" --method ddnnf-compiler --dump-ddnnf \"{dimacs_file}_d4.nnf\" > {result_file_path}"
+    return run_timeout(command, timeout, memory_limit)
+
 def run_p2d(opb_file, result_file_path):
-    command = "timeout " + str(timeout) + " ./lib/p2d \"" + opb_file + "\"" + " -m ddnnf -o " + "\"" + opb_file + "_p2d.nnf" + "\"" + " > " + result_file_path
-    start_time = time.perf_counter()
-    process = subprocess.Popen(command, shell=True)
-    process.communicate()
-    process.wait()
-    end_time = time.perf_counter()
-    if process.returncode == 124:
-        raise subprocess.TimeoutExpired(cmd=command, timeout=timeout)
-    if process.returncode != 0:
-            raise subprocess.CalledProcessError(process.returncode, command)
-    return end_time - start_time
+    command = f"./lib/p2d \"{opb_file}\" -m ddnnf -o \"{opb_file}_p2d.nnf\" > {result_file_path}"
+    return run_timeout(command, timeout, memory_limit)
+
+def ddnnife_command(arguments):
+    return f"systemd-run --scope -p MemoryMax={memory_limit} -p RuntimeMaxSec={timeout_ddnnife} --user ./lib/ddnnife {arguments}"
 
 def measure_dimacs_encoding(model_dir, result, run_n_times, stop_after_n_timeouts):
     files = []
@@ -263,24 +262,24 @@ def measure_p2d_ddnnf_size(result):
     for model in result:
         if "p2d_ddnnf_path" in result[model]:
             try:
-                log("start ddnife on: " + result[model]["p2d_ddnnf_path"])
+                log("start ddnnife on: " + result[model]["p2d_ddnnf_path"])
                 result[model]["p2d_ddnnf_size"] = count_ddnnf_literals(result[model]["p2d_ddnnf_path"])
             except subprocess.CalledProcessError as e:
                 result[model]["p2d_ddnnf_size"] = "ERROR: " + str(e)
-            log("finished ddnife on: " + result[model]["p2d_ddnnf_path"])
+            log("finished ddnnife on: " + result[model]["p2d_ddnnf_path"])
 
 def measure_d4_ddnnf_size(result):
     for model in result:
         if "d4_ddnnf_path" in result[model]:
             try:
-                log("start ddnife on: " + result[model]["d4_ddnnf_path"])
+                log("start ddnnife on: " + result[model]["d4_ddnnf_path"])
                 result[model]["d4_ddnnf_size"] = count_ddnnf_literals(result[model]["d4_ddnnf_path"])
             except subprocess.CalledProcessError as e:
                 result[model]["d4_ddnnf_size"] = "ERROR: " + str(e)
-            log("finished ddnife on: " + result[model]["d4_ddnnf_path"])
+            log("finished ddnnife on: " + result[model]["d4_ddnnf_path"])
             
 def count_ddnnf_literals(ddnnf_path):
-    command = "timeout " + str(timeout_ddknife) + " ./lib/ddnnife -i " + ddnnf_path + " --heuristics"
+    command = ddnnife_command(f"--input {ddnnf_path} statistics")
     process = subprocess.Popen(command, shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True)
 
     overall_node_count = None
@@ -314,21 +313,21 @@ def get_d4_mcs(result):
     for model in result:
         if "d4_output_path" in result[model]:
             try:
-                log("start d4 ddknife mc: " + result[model]["d4_ddnnf_path"])
+                log("start d4 ddnnife mc: " + result[model]["d4_ddnnf_path"])
                 result[model]["d4_mc"] = mc_from_ddnnf(result[model]["d4_ddnnf_path"], result[model]["dimacs_number_variables"]) #d4_mc_from_output(result[model]["d4_output_path"])
             except subprocess.CalledProcessError as e:
                 result[model]["d4_mc"] = "ERROR: " + str(e)
-            log("end d4 ddknife mc: " + result[model]["d4_ddnnf_path"])
+            log("end d4 ddnnife mc: " + result[model]["d4_ddnnf_path"])
 
 def get_p2d_mcs(result):
     for model in result:
         if "p2d_output_path" in result[model]:
             try:
-                log("start p2d ddknife mc: " + result[model]["p2d_ddnnf_path"])
+                log("start p2d ddnnife mc: " + result[model]["p2d_ddnnf_path"])
                 result[model]["p2d_mc"] = mc_from_ddnnf(result[model]["p2d_ddnnf_path"], result[model]["opb_number_variables"]) #p2d_mc_from_output(result[model]["p2d_output_path"])
             except subprocess.CalledProcessError as e:
                 result[model]["p2d_mc"] = "ERROR: " + str(e)
-            log("end p2d ddknife mc: " + result[model]["p2d_ddnnf_path"])
+            log("end p2d ddnnife mc: " + result[model]["p2d_ddnnf_path"])
 
 def d4_mc_from_output(output_file):
     with open(output_file, 'r') as file:
@@ -340,7 +339,7 @@ def d4_mc_from_output(output_file):
     return "ERROR"
 
 def mc_from_ddnnf(ddnnf_path, number_variables):
-    command = "timeout " + str(timeout_ddknife) + " ./lib/ddnnife -i " + ddnnf_path + " -t " + str(number_variables) + " count"
+    command = ddnnife_command(f"--input {ddnnf_path} -t {str(number_variables)} count")
     process = subprocess.Popen(command, shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True)
     stdout, stderr = process.communicate()
     process.wait()
