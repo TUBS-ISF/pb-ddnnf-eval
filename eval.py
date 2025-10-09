@@ -418,7 +418,7 @@ def main():
         repo_model_eval(number_runs)
     elif sys.argv[1] == 'random':
         rnd_model_eval(number_runs)
-    elif sys.arv[1] == 'isolated':
+    elif sys.argv[1] == 'isolated':
         iso_model_eval(number_runs, stop_after_n_timeouts)
     else:
         raise Exception(f'Invalid target dataset {sys.argv[1]}')
