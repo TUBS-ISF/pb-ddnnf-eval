@@ -281,33 +281,17 @@ def measure_d4_ddnnf_size(result):
 def count_ddnnf_literals(ddnnf_path):
     command = ddnnife_command(f"--input {ddnnf_path} statistics")
     process = subprocess.Popen(command, shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True)
+    process.wait()
+    data, error = process.communicate()
 
-    overall_node_count = None
+    if process.returncode != 0:
+      return "Overall node count not found."
 
-    # Read stderr line by line
-    for line in process.stderr:
-        match = re.search(r"The overall node count is (\d+)\.", line)
-        if match:
-            overall_node_count = int(match.group(1))
-            kill_process_tree(process.pid)
-            break
-
-    process.wait()  # Ensure process cleanup
-
-    if overall_node_count is not None:
-        return overall_node_count
-    else:
-        return "Overall node count not found."
-    
-def kill_process_tree(pid):
-    """ Kill a process and all its children. """
     try:
-        parent = psutil.Process(pid)  # Get parent process
-        for child in parent.children(recursive=True):  # Get all children
-            child.kill()  # Kill each child
-        parent.kill()  # Finally kill the parent
-    except psutil.NoSuchProcess:
-        pass  # Process already gone
+      parsed = json.loads(data)
+      return parsed["nodes"]["total"]
+    except:
+        return "Overall node count not found."
 
 def get_d4_mcs(result):
     for model in result:
