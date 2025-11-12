@@ -6,6 +6,8 @@ import pprint
 import re
 import psutil
 import sys
+import hashlib
+from pathlib import Path
 
 tmp_dir = "./tmp_files"
 log_file = "./eval.log"
@@ -20,6 +22,12 @@ def log(content):
 
 
 def run_encoding(uvl_file, dimacs_file, kind):
+    dimacs = Path(dimacs_file)
+
+    if dimacs.is_file():
+        log("encoded file already exists")
+        return 0
+
     try:
         #command = "java -Xmx512m -jar ./lib/fm-metamodel-1.1-jar-with-dependencies.jar \"" + uvl_file + "\" \"" + dimacs_file + "\" " + kind
         command = "timeout " + str(timeout) + " java -Xss1g -jar ./lib/ma-eval-1.0-SNAPSHOT-jar-with-dependencies.jar \"" + uvl_file + "\" \"" + dimacs_file + "\" " + kind
@@ -38,6 +46,17 @@ def run_encoding(uvl_file, dimacs_file, kind):
         process.kill()
         process.wait()
         raise e
+
+# pbcount can't parse the generated opb files.
+# The literals have to be converted into the format x0, x1, ...
+# The header needs an additional `*`.
+# The operators `*` and `+` need to be removed.
+# `"` need to be removed.
+def pbcount_fix_opb(opb_file, target_file):
+    to_run = f"sed -e 's/Feature-/x/g' {opb_file} | sed -e 's/feature/x/g' | sed -e 's/root_/x/g' | sed -e 's/#variable=/* #variable=/g' | sed -e 's/ \\*//g' | sed -e 's/+\\ //g' | tr -d \\\" > {target_file}"
+    process = subprocess.Popen(to_run, shell=True)
+    process.communicate()
+    process.wait()
 
 def run_timeout(command, timeout_seconds, mem_limit):
     to_run = f"systemd-run --scope -p MemoryMax={mem_limit} -p RuntimeMaxSec={timeout_seconds} --user {command}"
@@ -60,6 +79,10 @@ def run_p2d(opb_file, result_file_path):
     command = f"./lib/p2d \"{opb_file}\" -m ddnnf -o \"{opb_file}_p2d.nnf\" > {result_file_path}"
     return run_timeout(command, timeout, memory_limit)
 
+def run_pbcount(opb_file, result_file_path):
+    command = f"./lib/pbcount --cf {opb_file} > {result_file_path}"
+    return run_timeout(command, timeout, memory_limit)
+
 def ddnnife_command(arguments):
     return f"systemd-run --scope -p MemoryMax={memory_limit} -p RuntimeMaxSec={timeout_ddnnife} --user ./lib/ddnnife {arguments}"
 
@@ -72,7 +95,8 @@ def measure_dimacs_encoding(model_dir, result, run_n_times, stop_after_n_timeout
         files = get_unsorted_files(model_dir)
     for file in files:
         abs_path = os.path.abspath(file)
-        target_path = os.path.join(".", "tmp_files", os.path.basename(file) + str(hash(abs_path)) + ".dimacs")
+        ext = hashlib.sha256(abs_path.encode()).hexdigest()
+        target_path = os.path.join(".", "tmp_files", os.path.basename(file) + ext + ".dimacs")
         result.setdefault(abs_path, {})
         result[abs_path].setdefault("dimacs_time", [])
         model_timeout_counter = 0
@@ -117,7 +141,8 @@ def measure_opb_encoding(model_dir, result, run_n_times, stop_after_n_timeouts):
 
     for file in files:
         abs_path = os.path.abspath(file)
-        target_path = os.path.join(".", "tmp_files", os.path.basename(file) + str(hash(abs_path)) + ".opb")
+        ext = hashlib.sha256(abs_path.encode()).hexdigest()
+        target_path = os.path.join(".", "tmp_files", os.path.basename(file) + ext + ".opb")
         result.setdefault(abs_path, {})
         result[abs_path].setdefault("opb_time", [])
         model_timeout_counter = 0
@@ -191,6 +216,36 @@ def measure_p2d(result, run_n_times, stop_after_n_timeouts):
                     result[model]["p2d_time"].append("ERROR: " + str(e))
                     model_timeout_counter += 1
                 log("end p2d: " + model)
+                time.sleep(1.0)
+            if model_timeout_counter == run_n_times:
+                timeout_counter += 1
+            else:
+                timeout_counter = 0
+            if stop_after_n_timeouts > 0 and timeout_counter >= stop_after_n_timeouts:
+                break
+
+def measure_pbcount(result, run_n_times, stop_after_n_timeouts):
+    timeout_counter = 0
+    for model in result:
+        if "opb_file_path" in result[model]:
+            result[model].setdefault("pbcount_time", [])
+            opb_file = result[model]["opb_file_path"]
+            result_path = os.path.join(tmp_dir, os.path.basename(opb_file)) + "_pbcount_result.txt"
+            fixed_file = f"{opb_file}.fixed"
+            pbcount_fix_opb(opb_file, fixed_file)
+            model_timeout_counter = 0
+            for i in range(0, run_n_times):
+                try:
+                    log("starting pbcount: (" + str(i) + "): " + model)
+                    result[model]["pbcount_time"].append(run_pbcount(fixed_file, result_path))
+                    result[model]["pbcount_output_path"] = result_path
+                except subprocess.TimeoutExpired as e:
+                    result[model]["pbcount_time"].append("TIMEOUT")
+                    model_timeout_counter += 1
+                except subprocess.CalledProcessError as e:
+                    result[model]["pbcount_time"].append("ERROR: " + str(e))
+                    model_timeout_counter += 1
+                log("end pbcount: " + model)
                 time.sleep(1.0)
             if model_timeout_counter == run_n_times:
                 timeout_counter += 1
@@ -340,6 +395,20 @@ def p2d_mc_from_output(output_file):
                 return line.split()[1]
     return "ERROR"
 
+def get_pbcount_mcs(result):
+    for model in result:
+        if "pbcount_output_path" in result[model]:
+            result[model]["pbcount_mc"] = pbcount_mc_from_output(result[model]["pbcount_output_path"])
+
+def pbcount_mc_from_output(output_file):
+    with open(output_file, 'r') as file:
+        for line in file:
+            line = line.strip()
+
+            if line.startswith("s"):
+                return line.split()[2]
+    return "ERROR"
+
 def save_dict_to_file(dictionary, file_path):
     try:
         with open(file_path, 'w') as file:
@@ -376,8 +445,8 @@ def eval_modelset(name: str, model_dir, number_runs, stop_after_n_timeouts):
     result = {}
     os.makedirs(tmp_dir, exist_ok=True)
     start_time = time.perf_counter()
-    measure_dimacs_encoding(model_dir, result, number_runs, stop_after_n_timeouts)
-    measure_opb_encoding(model_dir, result, number_runs, stop_after_n_timeouts)
+    measure_dimacs_encoding(model_dir, result, 1, stop_after_n_timeouts)
+    measure_opb_encoding(model_dir, result, 1, stop_after_n_timeouts)
     measure_d4(result, number_runs, stop_after_n_timeouts)
     get_d4_mcs(result)
     measure_p2d(result, number_runs, stop_after_n_timeouts)
@@ -386,6 +455,8 @@ def eval_modelset(name: str, model_dir, number_runs, stop_after_n_timeouts):
     measure_opb_size(result)
     measure_d4_ddnnf_size(result)
     measure_p2d_ddnnf_size(result)
+    measure_pbcount(result, number_runs, stop_after_n_timeouts)
+    get_pbcount_mcs(result)
     end_time = time.perf_counter()
     duration = end_time - start_time
     log("time to evaluate: " + str(duration))
