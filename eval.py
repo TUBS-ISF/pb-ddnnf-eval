@@ -53,7 +53,7 @@ def run_encoding(uvl_file, dimacs_file, kind):
 # The operators `*` and `+` need to be removed.
 # `"` need to be removed.
 def pbcount_fix_opb(opb_file, target_file):
-    to_run = f"sed -e 's/Feature-/x/g' {opb_file} | sed -e 's/feature/x/g' | sed -e 's/root_/x/g' | sed -e 's/#variable=/* #variable=/g' | sed -e 's/ \\*//g' | sed -e 's/+\\ //g' | tr -d \\\" > {target_file}"
+    to_run = f"./lib/opb2pbcount --input {opb_file} --output {target_file}"
     process = subprocess.Popen(to_run, shell=True)
     process.communicate()
     process.wait()
