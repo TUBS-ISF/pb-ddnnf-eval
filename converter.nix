@@ -2,7 +2,7 @@
   lib,
   stdenv,
   makeWrapper,
-  jre_minimal,
+  jdk25_headless,
 }:
 stdenv.mkDerivation {
   pname = "converter";
@@ -14,8 +14,7 @@ stdenv.mkDerivation {
 
   installPhase = ''
     install -D ma-eval-1.0-SNAPSHOT-jar-with-dependencies.jar $out/share/java/converter.jar
-    makeWrapper ${jre_minimal}/bin/java $out/bin/converter \
-    --add-flags "-jar $out/share/java/converter.jar"
+    makeWrapper ${jdk25_headless}/bin/java $out/bin/converter --add-flags "-jar $out/share/java/converter.jar"
   '';
 
   meta = {
