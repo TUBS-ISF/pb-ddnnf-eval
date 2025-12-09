@@ -12,7 +12,9 @@ timefile=$3
 
 tmpdir=$(mktemp -d)
 
-apptainer exec -B $tmpdir:/out $image time -f "%e" -o /out/time opb2pbcount $input /out/out
+cp $input "${tmpdir}/in"
+
+apptainer exec -B $tmpdir:/out $image time -f "%e" -o /out/time opb2pbcount --input /out/in --output /out/out
 
 mv "${tmpdir}/out" $output
 mv "${tmpdir}/time" $timefile
