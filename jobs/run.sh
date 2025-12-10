@@ -20,6 +20,14 @@ do
 
   instance="${uvl#*/}"
 
+  dimacs_output="${output}/${instance}.dimacs"
+  opb_output="${output}/${instance}.opb"
+  opb_pbcount_output="${output}/${instance}.opb_pbcount"
+  d4_output="${output}/${instance}.nnf_d4"
+  p2d_output="${output}/${instance}.nnf_p2d"
+  d4_count="${output}/${instance}.count_d4"
+  p2d_count="${output}/${instance}.count_p2d"
+
   for i in `seq 1 3`
   do
     job_name="${task}-${instance}-${i}"
@@ -28,12 +36,6 @@ do
     outfile="${file_basename}.out"
     errfile="${file_basename}.err"
     timefile="${file_basename}.time"
-
-    dimacs_output="${output}/${instance}.dimacs"
-    opb_output="${output}/${instance}.opb"
-    opb_pbcount_output="${output}/${instance}.opb_pbcount"
-    d4_output="${output}/${instance}.nnf_d4"
-    p2d_output="${output}/${instance}.nnf_p2d"
 
     case "$task" in
     "dimacs")
@@ -54,6 +56,12 @@ do
     "pbcount")
       sbatch --job-name $job_name --output $outfile --error $errfile pbcount.sh $opb_pbcount_output $timefile
       ;;
+    "count_d4")
+      continue
+      ;;
+    "count_p2d")
+      continue
+      ;;
     *)
       echo "Unknown task!"
       exit 1
@@ -62,4 +70,18 @@ do
 
     sleep 0.25
   done
+
+  file_basename=${output}/${instance}.${task}
+  outfile="${file_basename}.out"
+  errfile="${file_basename}.err"
+  timefile="${file_basename}.time"
+
+  case "$task" in
+  "count_d4")
+    sbatch --job-name $job_name --output $outfile --error $errfile count_ddnnf.sh $d4_output $d4_count
+    ;;
+  "count_p2d")
+    sbatch --job-name $job_name --output $outfile --error $errfile count_ddnnf.sh $p2d_output $p2d_count
+    ;;
+  esac
 done
