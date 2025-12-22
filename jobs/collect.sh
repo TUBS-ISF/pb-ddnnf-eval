@@ -4,12 +4,24 @@
 #SBATCH --partition=cpu
 #SBATCH --mem=32gb
 
+# output interpretation for runtimes:
+#  non-zero: runtime
+#  -1: timeout
+#  -2: out of memory
+#  -3: process error within time limit
+#  -9: other error
+
+# output interpretation for results:
+#  non-zero: result
+#  -4: input file does not exist
+#  -9: other error
+
 output="/pfs/work9/workspace/scratch/ul_wqa66-pb"
 
 input=$1
 csv=$2
 
-printf "instance,dimacs_time,opb_time,opb_pbcount_time,d4_time,d4_count,p2d_time,p2d_count,pbcount_time,pbcount_count\n" > $csv
+tmp_csv=$(mktemp)
 
 files=$(find $input -type f)
 
@@ -17,11 +29,11 @@ for uvl in $files
 do
   instance="${uvl#*/}"
 
-  printf $instance >> $csv
+  printf $instance >> $tmp_csv
 
   for task in dimacs opb opb_pbcount d4 p2d pbcount
   do
-    printf "," >> $csv
+    printf "," >> $tmp_csv
 
     dimacs_output="${output}/${instance}.dimacs"
     opb_output="${output}/${instance}.opb"
@@ -35,31 +47,42 @@ do
     for i in `seq 1 3`
     do
       file_basename=${output}/${instance}.${task}.${i}
+      outfile="${file_basename}.out"
       timefile="${file_basename}.time"
-      time_run=-1
-      maybe_time=""
 
-      if [ -f $timefile ]
-      then
-        maybe_time=$(<$timefile)
-      fi
+      time_run=$(./parse_job.sh $outfile $timefile)
 
-      if [[ $maybe_time == *([[:digit:]]).+([[:digit:]]) ]]
-      then
-        time_run=$maybe_time
-      fi
-
-      printf -- "${time_run}" >> $csv
+      printf -- "${time_run}" >> $tmp_csv
 
       if [ $i -lt 3 ]
       then
-        printf ";" >> $csv
+        printf ";" >> $tmp_csv
       fi
     done
 
     case "$task" in
+    "dimacs")
+      size=-4
+
+      if [ -f $dimacs_output ]
+      then
+        size=$(./size_dimacs.sh $dimacs_output)
+      fi
+
+      printf ",${size}" >> $tmp_csv
+      ;;
+    "opb")
+      size=-4
+
+      if [ -f $opb_output ]
+      then
+        size=$(./size_opb.sh $opb_output)
+      fi
+
+      printf ",${size}" >> $tmp_csv
+      ;;
     "d4")
-      count=-1
+      count=-9
       maybe_count=""
 
       if [ -f $d4_count ]
@@ -72,10 +95,15 @@ do
         count=$maybe_count
       fi
 
-      printf ",${count}" >> $csv
+      if [ ! -f $dimacs_output ]
+      then
+        count=-4
+      fi
+
+      printf ",${count}" >> $tmp_csv
       ;;
     "p2d")
-      count=-1
+      count=-9
       maybe_count=""
 
       if [ -f $p2d_count ]
@@ -88,10 +116,15 @@ do
         count=$maybe_count
       fi
 
-      printf ",${count}" >> $csv
+      if [ ! -f $opb_output ]
+      then
+        count=-4
+      fi
+
+      printf ",${count}" >> $tmp_csv
       ;;
     "pbcount")
-      count=-1
+      count=-9
       maybe_count=""
 
       pbcount_output="${output}/${instance}.pbcount.1.out"
@@ -102,10 +135,18 @@ do
         count=$maybe_count
       fi
 
-      printf ",${count}" >> $csv
+      if [ ! -f $opb_pbcount_output ]
+      then
+        count=-4
+      fi
+
+      printf ",${count}" >> $tmp_csv
       ;;
     esac
   done
 
-  printf "\n" >> $csv
+  printf "\n" >> $tmp_csv
 done
+
+printf "instance,dimacs_time,dimacs_size,opb_time,opb_size,opb_pbcount_time,d4_time,d4_count,p2d_time,p2d_count,pbcount_time,pbcount_count\n" > $csv
+sort < $tmp_csv > $csv
