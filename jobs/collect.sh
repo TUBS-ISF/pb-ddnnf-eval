@@ -149,4 +149,4 @@ do
 done
 
 printf "instance,dimacs_time,dimacs_size,opb_time,opb_size,opb_pbcount_time,d4_time,d4_count,p2d_time,p2d_count,pbcount_time,pbcount_count\n" > $csv
-sort < $tmp_csv > $csv
+sort < $tmp_csv >> $csv
