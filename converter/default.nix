@@ -8,7 +8,7 @@ stdenv.mkDerivation {
   pname = "converter";
   version = "1.0.0";
 
-  src = ./lib;
+  src = ./.;
 
   nativeBuildInputs = [ makeWrapper ];
 
