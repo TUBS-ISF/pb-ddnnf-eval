@@ -1,12 +1,37 @@
 {
   description = "Reproduction Package for Empirical Evaluation on Pseudo-Boolean d-DNNF Compilation";
 
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+    d4 = {
+      url = "github:SoftVarE-Group/d4v2/2.3.2";
+    };
+    ddnnife = {
+      url = "github:SoftVarE-Group/d-dnnf-reasoner/0.10.0";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    p2d = {
+      url = "github:uulm-janbaudisch/p2d/nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    pbcount = {
+      url = "git+https://github.com/uulm-janbaudisch/pbcount?ref=nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    opb2pbcount = {
+      url = "github:uulm-janbaudisch/opb2pbcount/main";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
 
   outputs =
     {
       self,
       nixpkgs,
+      d4,
+      ddnnife,
+      pbcount,
+      opb2pbcount,
       ...
     }:
     let
@@ -28,15 +53,24 @@
           pkgsSelf = self.packages.${system};
         in
         {
-          converter = pkgs.callPackage ./converter.nix { };
+          d4 = d4.packages.${system}.default;
+          ddnnife = ddnnife.packages.${system}.default;
+          p2d = ddnnife.packages.${system}.default;
+          pbcount = ddnnife.packages.${system}.default;
+          converter = pkgs.callPackage ./converter/default.nix { };
           container = pkgs.dockerTools.buildLayeredImage {
             name = "pb-ddnnf-eval";
             contents = [
+              pkgsSelf.d4
+              pkgsSelf.ddnnife
+              pkgsSelf.p2d
+              pkgsSelf.pbcount
               pkgsSelf.converter
+              pkgs.busybox
               pkgs.time
             ];
             config = {
-              Entrypoint = [ (lib.getExe pkgsSelf.converter) ];
+              Entrypoint = [ "/bin/sh" ];
               Labels = {
                 "org.opencontainers.image.source" = "https://github.com/uulm-janbaudisch/pb-ddnnf-eval";
                 "org.opencontainers.image.description" =
