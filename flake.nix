@@ -15,7 +15,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     pbcount = {
-      url = "git+https://github.com/uulm-janbaudisch/pbcount?ref=nix";
+      url = "git+https://github.com/uulm-janbaudisch/pbcount?ref=nix&submodules=1";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     opb2pbcount = {
@@ -30,6 +30,7 @@
       nixpkgs,
       d4,
       ddnnife,
+      p2d,
       pbcount,
       opb2pbcount,
       ...
@@ -55,8 +56,9 @@
         {
           d4 = d4.packages.${system}.default;
           ddnnife = ddnnife.packages.${system}.default;
-          p2d = ddnnife.packages.${system}.default;
-          pbcount = ddnnife.packages.${system}.default;
+          p2d = p2d.packages.${system}.default;
+          pbcount = pbcount.packages.${system}.default;
+          opb2pbcount = opb2pbcount.packages.${system}.default;
           converter = pkgs.callPackage ./converter/default.nix { };
           container = pkgs.dockerTools.buildLayeredImage {
             name = "pb-ddnnf-eval";
@@ -66,11 +68,9 @@
               pkgsSelf.p2d
               pkgsSelf.pbcount
               pkgsSelf.converter
-              pkgs.busybox
               pkgs.time
             ];
             config = {
-              Entrypoint = [ "/bin/sh" ];
               Labels = {
                 "org.opencontainers.image.source" = "https://github.com/uulm-janbaudisch/pb-ddnnf-eval";
                 "org.opencontainers.image.description" =
