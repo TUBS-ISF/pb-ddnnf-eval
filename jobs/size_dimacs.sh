@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 dimacs_file=$1
 
