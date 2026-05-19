@@ -67,6 +67,7 @@
               pkgsSelf.ddnnife
               pkgsSelf.p2d
               pkgsSelf.pbcount
+              pkgsSelf.opb2pbcount
               pkgsSelf.converter
               pkgs.time
             ];
