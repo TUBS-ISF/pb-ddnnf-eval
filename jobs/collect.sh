@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #SBATCH --ntasks=1
 #SBATCH --time=120
 #SBATCH --partition=cpu
@@ -16,10 +16,9 @@
 #  -4: input file does not exist
 #  -9: other error
 
-output="/pfs/work9/workspace/scratch/ul_wqa66-pb"
-
 input=$1
-csv=$2
+output=$2
+csv=$3
 
 tmp_csv=$(mktemp)
 
