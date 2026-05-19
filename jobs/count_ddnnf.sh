@@ -4,6 +4,9 @@
 #SBATCH --partition=cpu
 #SBATCH --mem=32gb
 
+CONTAINER_IMAGE="${CONTAINER_IMAGE:-ghcr.io/tubs-isf/pb-ddnnf-eval:main-amd64}"
+CONTAINER_MODE="${CONTAINER_MODE:-apptainer}"
+
 ddnnf_file=$1
 output=$2
 
