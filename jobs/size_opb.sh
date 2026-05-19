@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 opb_file=$1
 

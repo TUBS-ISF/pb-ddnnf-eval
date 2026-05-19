@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # output interpretation:
 #  non-zero: runtime
@@ -9,8 +9,6 @@
 
 outfile=$1
 timefile=$2
-
-state=$(tail -n8 < $outfile | head -n1 | cut -d " " -f 2)
 
 time_run=-3
 maybe_time=""
@@ -24,6 +22,13 @@ if [[ $maybe_time == *([[:digit:]]).+([[:digit:]]) ]]
 then
   time_run=$maybe_time
 fi
+
+if [ "$SLURM_MODE" = "local" ]; then
+  echo $time_run
+  exit 1
+fi
+
+state=$(tail -n8 < $outfile | head -n1 | cut -d " " -f 2)
 
 case "$state" in
 "COMPLETED")
