@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #SBATCH --ntasks=1
 #SBATCH --time=10
 #SBATCH --partition=cpu

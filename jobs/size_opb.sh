@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 opb_file=$1
 

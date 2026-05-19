@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 pbcount_logfile=$1
 
