@@ -4,7 +4,7 @@
 #SBATCH --partition=cpu
 #SBATCH --mem=32gb
 
-image="docker://ghcr.io/softvare-group/ddnnife:0.10.0-amd64"
+image="docker://ghcr.io/TUBS-ISF/pb-ddnnf-eval:main-amd64"
 
 ddnnf_file=$1
 output=$2

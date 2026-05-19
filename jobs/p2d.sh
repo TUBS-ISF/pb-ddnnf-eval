@@ -4,7 +4,7 @@
 #SBATCH --partition=cpu
 #SBATCH --mem=32gb
 
-image="docker://ghcr.io/uulm-janbaudisch/p2d:nix-amd64"
+image="docker://ghcr.io/TUBS-ISF/pb-ddnnf-eval:main-amd64"
 
 opb_file=$1
 output=$2
