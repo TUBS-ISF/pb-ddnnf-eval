@@ -30,7 +30,7 @@ jobs:
       - name: Cache
         uses: cachix/cachix-action@v17
         with:
-          name: softvare-group
+          name: ${{ vars.CACHIX_NAME }}
           authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
       - name: Build
         run: nix build -L .#container
