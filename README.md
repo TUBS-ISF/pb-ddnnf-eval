@@ -1,4 +1,6 @@
 # Reproduction Package for Empirical Evaluation on Pseudo-Boolean d-DNNF Compilation
+This reproduction package can be used to reproduce and replicate the results of the empirical evaluation conducted in our TSE article `Tackling Expressive Feature-Modeling Constructs
+with Pseudo-Boolean d-DNNF Compilation`.
 
 ## Repository Structure
 
