@@ -1,11 +1,11 @@
 all:
 	$(MAKE) -C jobs all
 
-fm-benchmark:
-	$(MAKE) -C jobs fm-benchmark
+literature:
+	$(MAKE) -C jobs literature
 
 isolated:
 	$(MAKE) -C jobs isolated
 
-random:
-	$(MAKE) -C jobs random
+synthesized:
+	$(MAKE) -C jobs synthesized

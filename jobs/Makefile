@@ -9,16 +9,16 @@ all:
 	./run.sh ../models ../out count_p2d
 	./run.sh ../models ../out collect
 
-fm-benchmark:
-	./run.sh ../models/fm-benchmark ../out dimacs
-	./run.sh ../models/fm-benchmark ../out opb
-	./run.sh ../models/fm-benchmark ../out opb_pbcount
-	./run.sh ../models/fm-benchmark ../out d4
-	./run.sh ../models/fm-benchmark ../out p2d
-	./run.sh ../models/fm-benchmark ../out pbcount
-	./run.sh ../models/fm-benchmark ../out count_d4
-	./run.sh ../models/fm-benchmark ../out count_p2d
-	./run.sh ../models/fm-benchmark ../out collect
+literature:
+	./run.sh ../models/literature ../out dimacs
+	./run.sh ../models/literature ../out opb
+	./run.sh ../models/literature ../out opb_pbcount
+	./run.sh ../models/literature ../out d4
+	./run.sh ../models/literature ../out p2d
+	./run.sh ../models/literature ../out pbcount
+	./run.sh ../models/literature ../out count_d4
+	./run.sh ../models/literature ../out count_p2d
+	./run.sh ../models/literature ../out collect
 
 isolated:
 	./run.sh ../models/isolated ../out dimacs
@@ -31,13 +31,13 @@ isolated:
 	./run.sh ../models/isolated ../out count_p2d
 	./run.sh ../models/isolated ../out collect
 
-random:
-	./run.sh ../models/random ../out dimacs
-	./run.sh ../models/random ../out opb
-	./run.sh ../models/random ../out opb_pbcount
-	./run.sh ../models/random ../out d4
-	./run.sh ../models/random ../out p2d
-	./run.sh ../models/random ../out pbcount
-	./run.sh ../models/random ../out count_d4
-	./run.sh ../models/random ../out count_p2d
-	./run.sh ../models/random ../out collect
+synthesized:
+	./run.sh ../models/synthesized ../out dimacs
+	./run.sh ../models/synthesized ../out opb
+	./run.sh ../models/synthesized ../out opb_pbcount
+	./run.sh ../models/synthesized ../out d4
+	./run.sh ../models/synthesized ../out p2d
+	./run.sh ../models/synthesized ../out pbcount
+	./run.sh ../models/synthesized ../out count_d4
+	./run.sh ../models/synthesized ../out count_p2d
+	./run.sh ../models/synthesized ../out collect
