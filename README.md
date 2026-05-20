@@ -1,4 +1,6 @@
 # Reproduction Package for Empirical Evaluation on Pseudo-Boolean d-DNNF Compilation
+[![DOI](https://zenodo.org/badge/977048755.svg)](https://doi.org/10.5281/zenodo.20307775)
+
 This reproduction package can be used to reproduce and replicate the results of the empirical evaluation conducted in our TSE article `Tackling Expressive Feature-Modeling Constructs
 with Pseudo-Boolean d-DNNF Compilation`.
 
