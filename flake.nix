@@ -69,6 +69,7 @@
               pkgsSelf.pbcount
               pkgsSelf.opb2pbcount
               pkgsSelf.converter
+              pkgs.coreutils
               pkgs.time
             ];
             config = {

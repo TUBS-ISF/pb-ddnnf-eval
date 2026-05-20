@@ -24,8 +24,22 @@ then
 fi
 
 if [ "$SLURM_MODE" = "local" ]; then
-  echo $time_run
-  exit 1
+  state=$(tail -n1 < $outfile)
+
+  case "$state" in
+  "COMPLETED")
+    echo $time_run
+    exit 0
+    ;;
+  "TIMEOUT")
+    echo "-1"
+    exit 0
+    ;;
+  *)
+    echo "-9"
+    exit 0
+    ;;
+  esac
 fi
 
 state=$(tail -n8 < $outfile | head -n1 | cut -d " " -f 2)
