@@ -1,27 +1,88 @@
 # Reproduction Package for Empirical Evaluation on Pseudo-Boolean d-DNNF Compilation
 
 ## Repository Structure
-The repository consists of the following main components:
-* *final_results*: Contains the processed output of the results in the publication
-* *iso_models*: Contains the feature models representing the expressive concepts in isolation
-* *repo_models*: Contains the basic industrial feature models
-* *rnd_models*: Contains the randomly generated feature models containing different combinations of the concepts
-* *lib*: Contains the external dependencies required for running the evaluation
-* *eval.py*: Runner for the evaluation
 
-Note that the industrial dataset is omitted in this repository due to confidentiality.
+The repository consists of the following main components:
+
+- `converter`: Java Tool for converting UVL models to DIMACS and OPB formats
+- `jobs`: Scripts for running the evaluation
+- `models`: Input models for the evaluation
+- `results`: Results as evaluated on a Slurm cluster
 
 ## How to Reproduce
 
-The binaries provided have been tested on Ubuntu and Fedora only. Depending on your operating system you may need to recompile [d4](https://github.com/SoftVarE-Group/d4v2) and [p2d](https://github.com/TUBS-ISF/p2d).
-For d4, there are pre-compiled binaries for several OS in their [CI/CD](https://github.com/SoftVarE-Group/d4v2/releases/tag/2.0.0).
+> [!NOTE]  
+> This evaluation contains computationally demanding tasks.
+> When running it on all models in this repository, it can take many hours or multiple days to complete.
 
-Install dependencies: `pip3 install -r requirements.txt`
+This reproduction package comes in two variants:
+One using the Slurm scheduling system, which was originally used for this evaluation.
+The alternative is a local version, not depending on Slurm such that it can be run on a wide range of systems.
+By default, the Slurm mode is used when the `squeue` command is found.
+Otherwise the local mode is used.
 
-Evaluate on isolated models: `python3 eval.py isolated`
+> [!TIP]
+> The mode can be overridden using the `SLURM_MODE` environment variable: `slurm` or `local`
 
-Evaluate on random models: `python3 eval.py random`
+This evaluation is split in multiple steps:
 
-Evaluate on real-world model from [collection repository](https://github.com/SoftVarE-Group/feature-model-benchmark): `python3 eval.py repo`
+| Step          | Description                          | Depends on    |
+| ------------- | ------------------------------------ | ------------- |
+| `dimacs`      | Converts UVL models to DIMACS        |               |
+| `opb`         | Converts UVL models to OPB           |               |
+| `opb_pbcount` | Adapts OPB models for `pbcount`      | `opb`         |
+| `d4`          | Compiles DIMACS to d-DNNF using `d4` | `dimacs`      |
+| `p2d`         | Compiles OPB to d-DNNF using `p2d`   | `opb`         |
+| `pbcount`     | Counts OPB using `pbcount`           | `opb_pbcount` |
+| `count_d4`    | Counts d4 d-DNNF using `ddnnife`     | `d4`          |
+| `count_p2d`   | Counts p2d d-DNNF using `ddnnife`    | `p2d`         |
+| `collect`     | Collects all results into a CSV      | all above     |
 
-Note that the empirical evaluation is computationally demanding. Depending on the dataset, the evaluation may take days of runtime and dozens of GB of memory on the drive.
+### Slurm
+
+**Requirements:**
+
+- [Slurm][slurm]
+- [Apptainer][apptainer]
+
+The Slurm variant of this evaluation by default uses `apptainer` to run a container containing all the necessary tools.
+As Slurm jobs can run in parallel, not all steps can be started at the same time due to the dependencies mentioned above.
+Inside the `jobs` directory, use the following to start Slurm jobs for any given task:
+
+```
+./run.sh ../models/<models path> <output> <task>
+```
+
+where
+
+- `models path` is the path to the set of models to evaluate
+- `output` is a directory where to place output files (needs to be re-used between steps)
+- `task` is one of the steps described above
+
+The `output` task will place the CSV at `<output>/results.csv`.
+
+### Local
+
+> [!IMPORTANT]  
+> Results of the local mode are not directly comparable to those compiled using Slurm.
+> The setup running the evaluation is quite different.
+
+**Requirements:**
+
+- [Podman][podman]
+
+The local variant uses Podman to run the container.
+The same `./run.sh` script as with Slurm can be used.
+Alternatively, a `Makefile` is present in the root of this repository for running all steps after another:
+
+```
+make isolated
+```
+
+The command above will run all steps for the isolated models.
+Other available targets are `literature`, `synthesized` and `all` (default) for running all three.
+When using the `Makefile`, the output will be placed at `out`.
+
+[slurm]: https://slurm.schedmd.com
+[apptainer]: https://apptainer.org
+[podman]: https://podman.io
